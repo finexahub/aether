@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHER — Neural Interface</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background"></div>
+  
+  <div class="hud-container">
+    <!-- Top HUD -->
+    <div class="top-hud">
+      <div class="system-info">
+        <span class="status-dot"></span>
+        NEURAL CORE v2.1 • ONLINE
+      </div>
+      <div class="time" id="time"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <h1 class="title">AETHER</h1>
+      <p class="subtitle">NEXT GENERATION AI INTERFACE</p>
+
+      <!-- AI Orb -->
+      <div class="orb-container" id="orb">
+        <div class="orb-core"></div>
+        <div class="orb-glow"></div>
+        <div class="orb-ring"></div>
+      </div>
+
+      <div class="status" id="status">
+        SYSTEM STANDBY • AWAITING ACTIVATION
+      </div>
+
+      <!-- Response Log -->
+      <div class="response-log" id="log">
+        <div class="log-entry" id="welcome">
+          INITIALIZING QUANTUM CONSCIOUSNESS...
+        </div>
+      </div>
+
+      <!-- Activation Button -->
+      <button class="activate-btn" id="activateBtn">
+        <span class="btn-text">ACTIVATE VOICE INTERFACE</span>
+      </button>
+    </div>
+
+    <!-- Bottom HUD -->
+    <div class="bottom-hud">
+      <div class="protocol">PROTOCOL • OMEGA-7</div>
+      <div class="scanline"></div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
