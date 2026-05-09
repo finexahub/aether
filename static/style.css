@@ -1,0 +1,238 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: #05050f;
+  color: #00ffff;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.background {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at center, #1a1a3a 0%, #05050f 70%);
+  z-index: -2;
+}
+
+.background::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('https://source.unsplash.com/random/1920x1080/?cyberpunk,space') no-repeat center center/cover;
+  opacity: 0.15;
+  z-index: -1;
+}
+
+/* Glassmorphism + HUD */
+.hud-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.top-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background: rgba(10, 10, 30, 0.6);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00ff88;
+  animation: pulse 2s infinite;
+}
+
+.time {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 3px;
+  font-size: 1.1rem;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 5.5rem;
+  font-weight: 700;
+  letter-spacing: 8px;
+  background: linear-gradient(90deg, #00ffff, #00ffaa, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  letter-spacing: 6px;
+  color: #aaffff;
+  opacity: 0.9;
+}
+
+/* Futuristic Orb */
+.orb-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  cursor: pointer;
+  margin: 30px 0;
+}
+
+.orb-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #00ffff 0%, #0088ff 50%, #001133 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 80px #00ffff,
+    inset 0 0 60px rgba(255,255,255,0.8);
+  animation: orb-pulse 4s ease-in-out infinite;
+  z-index: 2;
+}
+
+.orb-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(0,255,255,0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(30px);
+  animation: glow-pulse 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+.orb-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 240px;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: ring-rotate 15s linear infinite;
+}
+
+@keyframes orb-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes ring-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Button */
+.activate-btn {
+  padding: 18px 50px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  background: transparent;
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+}
+
+.activate-btn:hover {
+  background: #00ffff;
+  color: #000;
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+  transform: scale(1.05);
+}
+
+/* Log */
+.response-log {
+  width: 520px;
+  min-height: 140px;
+  background: rgba(10, 15, 40, 0.7);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 1.05rem;
+  text-align: left;
+  overflow-y: auto;
+  backdrop-filter: blur(8px);
+}
+
+.log-entry {
+  margin: 8px 0;
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Bottom HUD */
+.bottom-hud {
+  padding: 15px;
+  text-align: center;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: #555577;
+  position: relative;
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(transparent, #00ffff, transparent);
+  animation: scan 4s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
