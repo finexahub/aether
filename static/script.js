@@ -1,89 +1,105 @@
-const orb = document.getElementById('orb');
-const statusEl = document.getElementById('status');
-const log = document.getElementById('log');
-const activateBtn = document.getElementById('activateBtn');
+class AetherAI {
+    constructor() {
+        this.studyMode = false;
+        this.init();
+    }
 
-// Real-time Clock
-function updateTime() {
-  const timeEl = document.getElementById('time');
-  setInterval(() => {
-    const now = new Date();
-    timeEl.textContent = now.toLocaleTimeString('en-US', { hour12: true });
-  }, 1000);
-}
+    init() {
+        this.updateClock();
+        this.bindEvents();
+        this.addWelcomeMessage();
+    }
 
-// Add log message
-function addLog(message, isAI = true) {
-  const entry = document.createElement('div');
-  entry.className = 'log-entry';
-  entry.innerHTML = isAI ? 
-    `<strong style="color:#00ffaa">AETHER:</strong> ${message}` : 
-    `<strong style="color:#ff88ff">USER:</strong> ${message}`;
-  log.appendChild(entry);
-  log.scrollTop = log.scrollHeight;
-}
+    updateClock() {
+        const clock = document.getElementById('clock');
+        setInterval(() => {
+            clock.textContent = new Date().toLocaleTimeString('en-US', { 
+                hour12: false 
+            });
+        }, 1000);
+    }
 
-// Orb Click / Activate
-orb.addEventListener('click', () => {
-  orb.style.transform = 'scale(1.15)';
-  setTimeout(() => orb.style.transform = 'scale(1)', 300);
-  activateAI();
-});
+    addWelcomeMessage() {
+        setTimeout(() => {
+            this.addLog('system', 'AETHER Neural Core Online. Welcome, Ayush.');
+        }, 600);
+    }
 
-// Voice Activation
-activateBtn.addEventListener('click', () => {
-  if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    
-    recognition.onresult = (event) => {
-      const command = event.results[0][0].transcript;
-      addLog(command, false);
-      
-      fetch('/api/activate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command })
-      })
-      .then(res => res.json())
-      .then(data => {
-        statusEl.textContent = "COGNITIVE CORE ACTIVE";
-        addLog(data.response);
+    addLog(type, message) {
+        const log = document.getElementById('logContent');
+        const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         
-        // Voice Response
-        const utterance = new SpeechSynthesisUtterance(data.response);
-        utterance.rate = 1.1;
-        speechSynthesis.speak(utterance);
-      });
-    };
-    
-    recognition.start();
-    statusEl.textContent = "LISTENING...";
-  } else {
-    alert("Voice recognition not supported in this browser.");
-  }
-});
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `
+            <span class="timestamp">[${time}]</span>
+            <span class="message">${message}</span>
+        `;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+    }
 
-function activateAI() {
-  statusEl.textContent = "NEURAL AWAKENING...";
-  addLog("Initializing quantum consciousness layer...");
-  
-  setTimeout(() => {
-    addLog("All systems synchronized.");
-    statusEl.textContent = "AETHER • FULLY OPERATIONAL";
-  }, 1200);
+    bindEvents() {
+        document.getElementById('voiceBtn').addEventListener('click', () => this.startVoice());
+        document.getElementById('studyBtn').addEventListener('click', () => this.toggleStudyMode());
+        
+        // Orb Click
+        document.getElementById('orb').addEventListener('click', () => {
+            this.addLog('system', 'Neural interface awakened.');
+        });
+    }
+
+    startVoice() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Voice recognition not supported in your browser.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.onstart = () => {
+            document.getElementById('statusText').textContent = "LISTENING...";
+        };
+
+        recognition.onresult = (e) => {
+            const command = e.results[0][0].transcript;
+            this.addLog('user', command);
+
+            fetch('/api/activate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command })
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.addLog('system', `AETHER: ${data.response}`);
+                const utterance = new SpeechSynthesisUtterance(data.response);
+                utterance.rate = 1.1;
+                speechSynthesis.speak(utterance);
+            });
+        };
+
+        recognition.start();
+    }
+
+    toggleStudyMode() {
+        this.studyMode = !this.studyMode;
+        const btn = document.getElementById('studyBtn');
+        const status = document.getElementById('statusText');
+
+        if (this.studyMode) {
+            btn.innerHTML = `📚 STUDY MODE ACTIVE`;
+            status.textContent = "STUDY MODE ACTIVE";
+            this.addLog('system', 'Focus protocols engaged. Distractions minimized.');
+        } else {
+            btn.innerHTML = `📖 START STUDY MODE`;
+            status.textContent = "SYSTEM STANDBY";
+            this.addLog('system', 'Study mode deactivated.');
+        }
+    }
 }
 
 // Initialize
-window.onload = () => {
-  updateTime();
-  addLog("Welcome, Operator. AETHER is now online.");
-  
-  // Subtle orb breathing
-  setInterval(() => {
-    orb.style.boxShadow = "0 0 80px #00ffff";
-    setTimeout(() => {
-      orb.style.boxShadow = "0 0 120px #00ffff";
-    }, 800);
-  }, 2000);
-};
+document.addEventListener('DOMContentLoaded', () => {
+    new AetherAI();
+});
